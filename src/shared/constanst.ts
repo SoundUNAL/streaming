@@ -1,0 +1,1 @@
+export var dataBaseConection : string = "mongodb://localhost/streamings" 
