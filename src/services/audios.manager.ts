@@ -20,7 +20,7 @@ export class TrackService {
     return db;
   }
   
-  async uploadTrack(audioDTO: CreateAudioDTO, audio: Express.Multer.File): Promise<string> {
+  async uploadTrack(audio: Express.Multer.File): Promise<string> {
     
     await this.getBucker()
 
@@ -35,17 +35,13 @@ export class TrackService {
         return reject(new Error('No audio file uploaded'));
     }
 
-    if (!audioDTO.id) {
-        return reject(new Error('No track ID provided'));
-    }
-
     let trackName = audio.filename;
     const readableTrackStream = new Readable();
     
     readableTrackStream.push(audio.buffer);
     readableTrackStream.push(null);
 
-    let uploadStream = this.bucket.openUploadStream(audioDTO.id);
+    let uploadStream = this.bucket.openUploadStream(trackName);
     var id = uploadStream.id;
     
     readableTrackStream.pipe(uploadStream);
