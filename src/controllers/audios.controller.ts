@@ -40,6 +40,16 @@ export class AudioController {
         }
     } 
 
+    @Get('/streaming/:audioID') 
+    async getAudio(@Res() res, @Param('audioID') audioID) {
+      try {
+        const trackService = new TrackService()
+        await trackService.getTrack(audioID, res);
+      } catch (error) {
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Failed to retrieve audio' });
+      }
+    }
+
     // Get Products /product
     // @Get('/list')
     @Get('/')

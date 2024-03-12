@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GridFSBucket, Db, MongoClient } from 'mongodb';
+import { GridFSBucket, Db, MongoClient, ObjectId } from 'mongodb';
 import { Readable } from 'stream';
 import { CreateAudioDTO } from '../dtos/audio.dto';
 import multer from 'multer';
@@ -8,7 +8,7 @@ import multer from 'multer';
 export class TrackService {
   private bucket: GridFSBucket;
 
-  async getBucker() {
+  async getBucket() {
     this.bucket = new GridFSBucket(await this.getConnection(), {
         bucketName: 'tracks',
     });
@@ -22,7 +22,7 @@ export class TrackService {
   
   async uploadTrack(audio: Express.Multer.File): Promise<string> {
     
-    await this.getBucker()
+    await this.getBucket()
 
     return new Promise<string>((resolve, reject) => {
 
@@ -57,4 +57,33 @@ export class TrackService {
     });
     });
   }
+
+  async getTrack(trackID: string, res: any): Promise<void> {
+    let trackObjectId;
+    try {
+      trackObjectId = new ObjectId(trackID);
+    } catch (error) {
+      return res.status(400).json({ message: "Invalid track in URL parameter." });
+    }
+
+    res.set("content-type", "audio/mp3");
+    res.set("accept-ranges", "bytes");
+    await this.getBucket();
+
+    console.log(this.bucket.find(trackObjectId))
+    const downloadStream = this.bucket.openDownloadStream(trackObjectId);
+
+    downloadStream.on('data', chunk => {
+      res.write(chunk);
+    });
+
+    downloadStream.on('error', () => {
+        return res.status(400).json({ message: "La cancion no existe." });
+    });
+
+    downloadStream.on('end', () => {
+      res.end();
+    });
+  }
+  
 }
