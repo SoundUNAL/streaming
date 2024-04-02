@@ -8,8 +8,7 @@ import { dataBaseConection } from '../shared/constanst';
 @Module({
   imports: 
   [
-    MongooseModule.forRoot(dataBaseConection),
-    AudioModule
+    MongooseModule.forRoot(dataBaseConection), AudioModule
   ],
   controllers: [AppController],
   providers: [AppService],

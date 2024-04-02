@@ -11,19 +11,20 @@ export class AudioController {
 
     @Post('upload')
     @UseInterceptors(FileInterceptor('audio'))
-    async uploadAudio(@Res() res, @UploadedFile() audio: Express.Multer.File, @Body() body: {}) {
+    async uploadAudio(@Res() res, @UploadedFile() audio: Express.Multer.File) {
 
         try {
-          
+
+            console.log("asdasdasd")
             const trackService = new TrackService()
-            const audioId = await trackService.uploadTrack(audio);
-            let createAudioDTO = new CreateAudioDTO();
-            
+            const audioId = await trackService.uploadTrack(audio)
+
+            let createAudioDTO = new CreateAudioDTO()
             createAudioDTO.name = audio.originalname
             createAudioDTO.id = audioId
             
             console.log(createAudioDTO)
-
+  
             this.audioService.createAudio(createAudioDTO)
 
             res.status(HttpStatus.OK).json({
@@ -43,6 +44,7 @@ export class AudioController {
     @Get('/streaming/:audioID') 
     async getAudio(@Res() res, @Param('audioID') audioID) {
       try {
+        console.log("-------------")
         const trackService = new TrackService()
         await trackService.getTrack(audioID, res);
       } catch (error) {

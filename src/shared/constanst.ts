@@ -1,1 +1,1 @@
-export var dataBaseConection : string = "mongodb://localhost/streamings" 
+export var dataBaseConection : string = "mongodb://localhost:27019/streamings" 

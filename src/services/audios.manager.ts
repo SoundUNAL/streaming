@@ -15,7 +15,7 @@ export class TrackService {
   }
 
   async getConnection(): Promise<Db> {
-    const client = await MongoClient.connect('mongodb://localhost:27017');
+    const client = await MongoClient.connect('mongodb://localhost:27019');
     const db = client.db('audios');
     return db;
   }
@@ -70,9 +70,11 @@ export class TrackService {
     res.set("accept-ranges", "bytes");
     await this.getBucket();
 
-    console.log(this.bucket.find(trackObjectId))
+    //console.log(this.bucket.find(trackObjectId))
     const downloadStream = this.bucket.openDownloadStream(trackObjectId);
 
+    console.log(downloadStream)
+    
     downloadStream.on('data', chunk => {
       res.write(chunk);
     });

@@ -1,16 +1,17 @@
 version: '3.8'
-
 services:
-  nestjs-app:
-    build:
-      context: .
-      dockerfile: DockerFile-node
-    ports:
-      - "3000:3000"
-    volumes:
-      - .:/app
-    depends_on:
-      - mongodb
+#  nestjs-app:
+#    build:
+#      context: .
+#      dockerfile: DockerFile-node
+#    ports:
+#      - "3001:3001"
+#    volumes:
+#      - .:/app
+#    depends_on:
+#      - mongodb
+#    networks:
+#      - my-network 
 
   mongodb:
     build:
@@ -18,9 +19,16 @@ services:
       dockerfile: DockerFile-mongodb
     restart: always
     ports:
-      - "27017:27017"
+      - "27019:27017"
     volumes:
       - mongodb-data:/data/db
+    networks:
+      - my-network
 
 volumes:
   mongodb-data:
+
+networks:
+  my-network: 
+    driver: bridge 
+  
