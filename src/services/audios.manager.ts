@@ -15,7 +15,7 @@ export class TrackService {
   }
 
   async getConnection(): Promise<Db> {
-    const client = await MongoClient.connect('mongodb://localhost:27019');
+    const client = await MongoClient.connect('mongodb://mongodb-docker:27017');
     const db = client.db('audios');
     return db;
   }
